@@ -47,19 +47,13 @@ export default function DrinksPage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Mina Drinkar</h1>
-          <p className="text-gray-600 mt-1">
-            {drinks.length} {drinks.length === 1 ? 'drink' : 'drinkar'}
-          </p>
-        </div>
-        <div className="text-sm text-gray-600">
-          Hantera drinkar via menyn högst upp.
         </div>
       </div>
 
       {/* Search and filters */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1 flex gap-2">
-          <div className="w-64">
+        <div className="flex-1 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="w-full sm:w-64">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
@@ -68,7 +62,7 @@ export default function DrinksPage() {
           </div>
 
           {/* Quick spirit filters */}
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center flex-wrap">
             {['Whisky', 'Gin', 'Vodka', 'Rom', 'Tequila', 'Cava', 'Prosecco'].map((spirit) => (
               <button
                 key={spirit}

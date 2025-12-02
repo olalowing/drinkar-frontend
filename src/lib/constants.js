@@ -10,6 +10,9 @@ export const GLASS_TYPES = [
   'Coupe',
   'Nick & Nora',
   'Balloon',
+  'Flöjt',
+  'Hurricane',
+  'Kopparmugg',
 ]
 
 export const SERVING_TYPES = ['Shaker', 'Build', 'Stir', 'Blend']
@@ -23,6 +26,12 @@ export const SPRITBAS_OPTIONS = [
   'Brandy',
   'Cognac',
   'Likör',
+  'Amaretto',
+  'Aperitif',
+  'Cachaça',
+  'Mezcal',
+  'Pisco',
+  'Rågwhisky',
   'Öl',
   'Vin',
   'Cava',

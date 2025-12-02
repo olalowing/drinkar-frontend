@@ -4,6 +4,7 @@ import DrinksPage from './pages/DrinksPage'
 import DrinkDetailPage from './pages/DrinkDetailPage'
 import AddDrinkPage from './pages/AddDrinkPage'
 import EditDrinkPage from './pages/EditDrinkPage'
+import ImportDrinksPage from './pages/ImportDrinksPage'
 import IngredientsPage from './pages/IngredientsPage'
 import IngredientDetailPage from './pages/IngredientDetailPage'
 import AddIngredientPage from './pages/AddIngredientPage'
@@ -20,6 +21,7 @@ function App() {
         <Route path="/drinks/:id" element={<DrinkDetailPage />} />
         <Route path="/drinks/new" element={<AddDrinkPage />} />
         <Route path="/drinks/:id/edit" element={<EditDrinkPage />} />
+        <Route path="/drinks/import" element={<ImportDrinksPage />} />
         
         <Route path="/ingredients" element={<IngredientsPage />} />
         <Route path="/ingredients/:id" element={<IngredientDetailPage />} />

@@ -173,6 +173,35 @@ export default function EditDrinkPage() {
                 </select>
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Servering
+                </label>
+                <select
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  value={formData.serving_type}
+                  onChange={(e) => setFormData({ ...formData, serving_type: e.target.value })}
+                >
+                  {SERVING_TYPES.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <Input
+                label="Garnering"
+                placeholder="t.ex. Citronskiva, Mynta"
+                value={formData.garnish}
+                onChange={(e) => setFormData({ ...formData, garnish: e.target.value })}
+              />
+            </div>
+            <Input
+              label="YouTube URL"
+              type="url"
+              placeholder="https://youtube.com/watch?v=..."
+              value={formData.youtube_url}
+              onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
+            />
           </div>
         </Card>
 

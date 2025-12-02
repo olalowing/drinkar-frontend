@@ -91,7 +91,7 @@ export default function AddDrinkPage() {
                 Beskrivning
               </label>
               <textarea
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400"
                 rows="3"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -103,7 +103,7 @@ export default function AddDrinkPage() {
                   Spritbas
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   value={formData.spritbas}
                   onChange={(e) => setFormData({ ...formData, spritbas: e.target.value })}
                 >
@@ -117,7 +117,7 @@ export default function AddDrinkPage() {
                   Glas
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   value={formData.glass_type}
                   onChange={(e) => setFormData({ ...formData, glass_type: e.target.value })}
                 >
@@ -127,6 +127,35 @@ export default function AddDrinkPage() {
                 </select>
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Servering
+                </label>
+                <select
+                  className="w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  value={formData.serving_type}
+                  onChange={(e) => setFormData({ ...formData, serving_type: e.target.value })}
+                >
+                  {SERVING_TYPES.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <Input
+                label="Garnering"
+                placeholder="t.ex. Citronskiva, Mynta"
+                value={formData.garnish}
+                onChange={(e) => setFormData({ ...formData, garnish: e.target.value })}
+              />
+            </div>
+            <Input
+              label="YouTube URL"
+              type="url"
+              placeholder="https://youtube.com/watch?v=..."
+              value={formData.youtube_url}
+              onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
+            />
           </div>
         </Card>
 
@@ -145,14 +174,14 @@ export default function AddDrinkPage() {
                 <input
                   type="text"
                   placeholder="Ingrediens"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                  className="flex-1 px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg placeholder-gray-400 focus:ring-2 focus:ring-primary-500"
                   value={ing.name}
                   onChange={(e) => updateIngredient(idx, 'name', e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Mängd"
-                  className="w-32 px-3 py-2 border border-gray-300 rounded-lg"
+                  className="w-32 px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg placeholder-gray-400 focus:ring-2 focus:ring-primary-500"
                   value={ing.amount}
                   onChange={(e) => updateIngredient(idx, 'amount', e.target.value)}
                 />
@@ -189,7 +218,7 @@ export default function AddDrinkPage() {
                 <input
                   type="text"
                   placeholder="Instruktion"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                  className="flex-1 px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg placeholder-gray-400 focus:ring-2 focus:ring-primary-500"
                   value={inst}
                   onChange={(e) => updateInstruction(idx, e.target.value)}
                 />

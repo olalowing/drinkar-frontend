@@ -1,14 +1,53 @@
-import { NavLink } from 'react-router-dom'
-import { Wine, Leaf, Home, ChefHat } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { NavLink, Link } from 'react-router-dom'
+import { Wine, Leaf, Home, ChefHat, Upload, ChevronDown } from 'lucide-react'
 import Logo from './Logo'
 
 export default function Layout({ children }) {
+  const [actionsOpen, setActionsOpen] = useState(false)
+  const actionsRef = useRef(null)
+
   const navItems = [
     { to: '/drinks', icon: Wine, label: 'Drinkar' },
     { to: '/my-bar', icon: Home, label: 'Min Bar' },
     { to: '/can-make', icon: ChefHat, label: 'Kan göra' },
     { to: '/ingredients', icon: Leaf, label: 'Ingredienser' },
   ]
+
+  const quickActions = [
+    {
+      to: '/drinks/new',
+      icon: Wine,
+      label: 'Ny drink',
+      description: 'Skapa en ny cocktail i samlingen',
+    },
+    {
+      to: '/ingredients/new',
+      icon: Leaf,
+      label: 'Ny ingrediens',
+      description: 'Lägg till en ny sprit eller ingrediens',
+    },
+    {
+      to: '/drinks/import',
+      icon: Upload,
+      label: 'Importera CSV',
+      description: 'Massimportera drinkar från fil',
+    },
+  ]
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (actionsRef.current && !actionsRef.current.contains(event.target)) {
+        setActionsOpen(false)
+      }
+    }
+
+    if (actionsOpen) {
+      document.addEventListener('click', handleClick)
+    }
+
+    return () => document.removeEventListener('click', handleClick)
+  }, [actionsOpen])
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-blue-50/30 to-slate-50/30">
@@ -17,6 +56,40 @@ export default function Layout({ children }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Logo size="default" />
+            <div className="relative" ref={actionsRef}>
+              <button
+                onClick={() => setActionsOpen(!actionsOpen)}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white/70 hover:bg-white focus:ring-2 focus:ring-primary-500 transition-all"
+              >
+                Meny
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${actionsOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+
+              {actionsOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl shadow-gray-500/15 overflow-hidden z-50">
+                  <div className="py-1">
+                    {quickActions.map((action) => (
+                      <Link
+                        key={action.to}
+                        to={action.to}
+                        onClick={() => setActionsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="text-gray-500">
+                          <action.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">{action.label}</p>
+                          <p className="text-xs text-gray-500">{action.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>

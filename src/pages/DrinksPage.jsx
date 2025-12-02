@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Plus, Wine, Upload, Grid3x3, List } from 'lucide-react'
+import { Wine, Grid3x3, List } from 'lucide-react'
 import { useDrinks } from '../hooks/useDrinks'
 import { groupDrinksBySpritbas } from '../lib/utils'
 import Button from '../components/ui/Button'
@@ -52,19 +51,8 @@ export default function DrinksPage() {
             {drinks.length} {drinks.length === 1 ? 'drink' : 'drinkar'}
           </p>
         </div>
-        <div className="flex gap-3 shrink-0">
-          <Link to="/drinks/import">
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto">
-              <Upload className="w-5 h-5 mr-2" />
-              Importera CSV
-            </Button>
-          </Link>
-          <Link to="/drinks/new">
-            <Button size="lg" className="w-full sm:w-auto shadow-lg">
-              <Plus className="w-5 h-5 mr-2" />
-              Ny drink
-            </Button>
-          </Link>
+        <div className="text-sm text-gray-600">
+          Hantera drinkar via menyn högst upp.
         </div>
       </div>
 

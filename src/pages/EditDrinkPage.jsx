@@ -9,6 +9,7 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Card from '../components/ui/Card'
 import Loading from '../components/ui/Loading'
+import StarRating from '../components/ui/StarRating'
 
 export default function EditDrinkPage() {
   const { id } = useParams()
@@ -24,6 +25,7 @@ export default function EditDrinkPage() {
     serving_type: 'Shaker',
     garnish: '',
     youtube_url: '',
+    rating: 0,
   })
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }])
   const [instructions, setInstructions] = useState([''])
@@ -40,6 +42,7 @@ export default function EditDrinkPage() {
         serving_type: drink.serving_type || 'Shaker',
         garnish: drink.garnish || '',
         youtube_url: drink.youtube_url || '',
+        rating: drink.rating || 0,
       })
       setIngredients(
         drink.ingredients?.length > 0
@@ -64,6 +67,7 @@ export default function EditDrinkPage() {
 
       const drinkData = {
         ...formData,
+        rating: formData.rating || null,
         ingredients: ingredients.filter(i => i.name && i.amount),
         instructions: filteredInstructions,
         images: images.length > 0 ? images : undefined,
@@ -202,6 +206,33 @@ export default function EditDrinkPage() {
               value={formData.youtube_url}
               onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mitt betyg
+              </label>
+              <div className="flex items-center gap-3">
+                <StarRating
+                  value={formData.rating}
+                  onChange={(value) => setFormData({ ...formData, rating: value })}
+                />
+                {formData.rating > 0 ? (
+                  <>
+                    <span className="text-sm text-gray-600">
+                      {formData.rating} av 5
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, rating: 0 })}
+                      className="text-xs text-gray-500 hover:text-gray-700 underline"
+                    >
+                      Rensa
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-sm text-gray-500">Valfritt</span>
+                )}
+              </div>
+            </div>
           </div>
         </Card>
 

@@ -14,6 +14,7 @@ CREATE TABLE ingredients (
   image_url TEXT,
   notes TEXT DEFAULT '',
   systembolaget_number TEXT DEFAULT '',
+  systembolaget_url TEXT DEFAULT '',
   has_at_home BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -24,6 +25,7 @@ CREATE TABLE drinks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   description TEXT DEFAULT '',
+  rating INTEGER CHECK (rating BETWEEN 1 AND 5),
   glass_type TEXT DEFAULT 'Cocktail',
   serving_type TEXT DEFAULT 'Shaker',
   garnish TEXT DEFAULT '',

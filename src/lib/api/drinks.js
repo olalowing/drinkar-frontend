@@ -116,9 +116,14 @@ export async function createDrink(drinkData) {
     const { images, ingredients, instructions, tags, ...drinkInfo } = drinkData
 
     // 1. Create drink
+    const sanitizedDrinkInfo = {
+      ...drinkInfo,
+      rating: normalizeRating(drinkInfo.rating),
+    }
+
     const { data: drink, error: drinkError } = await supabase
       .from('drinks')
-      .insert([drinkInfo])
+      .insert([sanitizedDrinkInfo])
       .select()
       .single()
 
@@ -201,9 +206,14 @@ export async function updateDrink(id, drinkData) {
     const { images, existingImages, ingredients, instructions, tags, ...drinkInfo } = drinkData
 
     // 1. Update drink info
+    const sanitizedDrinkInfo = {
+      ...drinkInfo,
+      rating: normalizeRating(drinkInfo.rating),
+    }
+
     const { error: drinkError } = await supabase
       .from('drinks')
-      .update(drinkInfo)
+      .update(sanitizedDrinkInfo)
       .eq('id', id)
 
     if (drinkError) throw drinkError
@@ -435,4 +445,12 @@ export async function getTags() {
     console.error('Error fetching tags:', error)
     throw error
   }
+}
+
+function normalizeRating(value) {
+  if (value === undefined || value === null) return null
+  const numberValue = Number(value)
+  if (!Number.isFinite(numberValue)) return null
+  if (numberValue < 1 || numberValue > 5) return null
+  return Math.round(numberValue)
 }

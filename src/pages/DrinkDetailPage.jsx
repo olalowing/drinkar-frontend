@@ -5,6 +5,7 @@ import { deleteDrink } from '../lib/api/drinks'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import Loading from '../components/ui/Loading'
+import StarRating from '../components/ui/StarRating'
 
 export default function DrinkDetailPage() {
   const { id } = useParams()
@@ -48,6 +49,14 @@ export default function DrinkDetailPage() {
         <div>
           <h1 className="text-4xl font-bold text-gray-900">{drink.name}</h1>
           <p className="text-gray-600 mt-2">{drink.spritbas}</p>
+          {drink.rating ? (
+            <div className="flex items-center gap-3 mt-3">
+              <StarRating value={drink.rating} readOnly size="lg" />
+              <span className="text-sm font-semibold text-gray-700">{drink.rating} / 5</span>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500 mt-3">Inte betygsatt ännu</p>
+          )}
         </div>
         <div className="flex gap-2">
           <Link to={`/drinks/${id}/edit`}>
@@ -85,36 +94,40 @@ export default function DrinkDetailPage() {
         </Card>
       )}
 
-      {/* Ingredients */}
-      {drink.ingredients && drink.ingredients.length > 0 && (
-        <Card>
-          <h2 className="text-xl font-semibold mb-4">Ingredienser</h2>
-          <ul className="space-y-2">
-            {drink.ingredients.map((ing, idx) => (
-              <li key={idx} className="flex justify-between">
-                <span>{ing.ingredient_name}</span>
-                <span className="font-medium">{ing.amount}</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
+      {(drink.ingredients?.length > 0 || drink.instructions?.length > 0) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Ingredients */}
+          {drink.ingredients && drink.ingredients.length > 0 && (
+            <Card className="h-full">
+              <h2 className="text-xl font-semibold mb-4">Ingredienser</h2>
+              <ul className="space-y-2">
+                {drink.ingredients.map((ing, idx) => (
+                  <li key={idx} className="flex justify-between">
+                    <span>{ing.ingredient_name}</span>
+                    <span className="font-medium">{ing.amount}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
 
-      {/* Instructions */}
-      {drink.instructions && drink.instructions.length > 0 && (
-        <Card>
-          <h2 className="text-xl font-semibold mb-4">Instruktioner</h2>
-          <ol className="space-y-3">
-            {drink.instructions.map((inst, idx) => (
-              <li key={idx} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
-                  {idx + 1}
-                </span>
-                <span className="text-gray-700 pt-0.5">{inst}</span>
-              </li>
-            ))}
-          </ol>
-        </Card>
+          {/* Instructions */}
+          {drink.instructions && drink.instructions.length > 0 && (
+            <Card className="h-full">
+              <h2 className="text-xl font-semibold mb-4">Instruktioner</h2>
+              <ol className="space-y-3">
+                {drink.instructions.map((inst, idx) => (
+                  <li key={idx} className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                      {idx + 1}
+                    </span>
+                    <span className="text-gray-700 pt-0.5">{inst}</span>
+                  </li>
+                ))}
+              </ol>
+            </Card>
+          )}
+        </div>
       )}
 
       {/* Details */}

@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Edit2, Trash2, ArrowLeft, CheckCircle, Circle } from 'lucide-react'
+import { Edit2, Trash2, ArrowLeft, CheckCircle, Circle, ExternalLink } from 'lucide-react'
 import { useIngredient, useUpdateIngredient } from '../hooks/useIngredients'
 import { deleteIngredient } from '../lib/api/ingredients'
 import Button from '../components/ui/Button'
@@ -121,6 +121,22 @@ export default function IngredientDetailPage() {
             <div>
               <dt className="text-sm text-gray-600">Systembolaget-nummer</dt>
               <dd className="font-medium">{ingredient.systembolaget_number}</dd>
+            </div>
+          )}
+          {ingredient.systembolaget_url && (
+            <div className="col-span-2">
+              <dt className="text-sm text-gray-600 mb-1">Systembolaget-länk</dt>
+              <dd>
+                <a
+                  href={ingredient.systembolaget_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold"
+                >
+                  Öppna produktsida
+                  <ExternalLink className="w-4 h-4 ml-1" />
+                </a>
+              </dd>
             </div>
           )}
         </dl>

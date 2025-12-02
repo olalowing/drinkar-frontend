@@ -143,6 +143,17 @@ export function extractInstructions(row) {
   return instructions
 }
 
+function parseRatingValue(value) {
+  if (value === undefined || value === null) return null
+  const normalized = normalizeText(value)
+  if (!normalized) return null
+  const numberValue = Number(normalized.replace(',', '.'))
+  if (!Number.isFinite(numberValue)) return null
+  const rounded = Math.round(numberValue)
+  if (rounded < 1 || rounded > 5) return null
+  return rounded
+}
+
 // Transform CSV row to drink object
 export function transformDrinkData(row) {
   return {
@@ -153,6 +164,7 @@ export function transformDrinkData(row) {
     serving_type: normalizeServingType(row.ServingType),
     garnish: normalizeText(row.Garnish) || '',
     youtube_url: normalizeText(row.YouTubeURL) || '',
+    rating: parseRatingValue(row.Rating),
     ingredients: extractIngredients(row),
     instructions: extractInstructions(row),
     tags: row.Tags ? normalizeText(row.Tags).split(';').filter(t => t.trim()) : [],

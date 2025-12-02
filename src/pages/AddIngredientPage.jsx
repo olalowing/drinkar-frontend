@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { createIngredient } from '../lib/api/ingredients'
 import { INGREDIENT_CATEGORY_LIST } from '../lib/constants'
+import { extractSystembolagetNumber } from '../lib/utils'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Card from '../components/ui/Card'
@@ -16,6 +17,7 @@ export default function AddIngredientPage() {
     description: '',
     alcohol_content: '',
     systembolaget_number: '',
+    systembolaget_url: '',
     notes: '',
     has_at_home: false,
   })
@@ -43,6 +45,15 @@ export default function AddIngredientPage() {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0]
     if (file) setImage(file)
+  }
+
+  const handleSystembolagetUrlChange = (value) => {
+    const parsedNumber = extractSystembolagetNumber(value)
+    setFormData((prev) => ({
+      ...prev,
+      systembolaget_url: value,
+      systembolaget_number: parsedNumber || prev.systembolaget_number,
+    }))
   }
 
   return (
@@ -106,6 +117,13 @@ export default function AddIngredientPage() {
                 onChange={(e) => setFormData({ ...formData, systembolaget_number: e.target.value })}
               />
             </div>
+            <Input
+              label="Systembolaget-länk"
+              type="url"
+              placeholder="https://www.systembolaget.se/produkt/..."
+              value={formData.systembolaget_url}
+              onChange={(e) => handleSystembolagetUrlChange(e.target.value)}
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

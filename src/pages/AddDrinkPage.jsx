@@ -6,6 +6,7 @@ import { SPRITBAS_OPTIONS, GLASS_TYPES, SERVING_TYPES } from '../lib/constants'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Card from '../components/ui/Card'
+import StarRating from '../components/ui/StarRating'
 
 export default function AddDrinkPage() {
   const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function AddDrinkPage() {
     serving_type: 'Shaker',
     garnish: '',
     youtube_url: '',
+    rating: 0,
   })
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }])
   const [instructions, setInstructions] = useState([''])
@@ -30,6 +32,7 @@ export default function AddDrinkPage() {
     try {
       const drinkData = {
         ...formData,
+        rating: formData.rating || null,
         ingredients: ingredients.filter(i => i.name && i.amount),
         instructions: instructions.filter(i => i && i.trim()),
         images: images,
@@ -156,6 +159,33 @@ export default function AddDrinkPage() {
               value={formData.youtube_url}
               onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mitt betyg
+              </label>
+              <div className="flex items-center gap-3">
+                <StarRating
+                  value={formData.rating}
+                  onChange={(value) => setFormData({ ...formData, rating: value })}
+                />
+                {formData.rating > 0 ? (
+                  <>
+                    <span className="text-sm text-gray-600">
+                      {formData.rating} av 5
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, rating: 0 })}
+                      className="text-xs text-gray-500 hover:text-gray-700 underline"
+                    >
+                      Rensa
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-sm text-gray-500">Valfritt</span>
+                )}
+              </div>
+            </div>
           </div>
         </Card>
 

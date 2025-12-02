@@ -4,6 +4,7 @@ import { ArrowLeft, X } from 'lucide-react'
 import { useIngredient } from '../hooks/useIngredients'
 import { updateIngredient } from '../lib/api/ingredients'
 import { INGREDIENT_CATEGORY_LIST } from '../lib/constants'
+import { extractSystembolagetNumber } from '../lib/utils'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Card from '../components/ui/Card'
@@ -20,6 +21,7 @@ export default function EditIngredientPage() {
     description: '',
     alcohol_content: '',
     systembolaget_number: '',
+    systembolaget_url: '',
     notes: '',
     has_at_home: false,
   })
@@ -34,6 +36,7 @@ export default function EditIngredientPage() {
         description: ingredient.description || '',
         alcohol_content: ingredient.alcohol_content?.toString() || '',
         systembolaget_number: ingredient.systembolaget_number || '',
+        systembolaget_url: ingredient.systembolaget_url || '',
         notes: ingredient.notes || '',
         has_at_home: ingredient.has_at_home || false,
       })
@@ -68,6 +71,15 @@ export default function EditIngredientPage() {
 
   const removeNewImage = () => setImage(null)
   const removeExistingImage = () => setExistingImage(null)
+
+  const handleSystembolagetUrlChange = (value) => {
+    const parsedNumber = extractSystembolagetNumber(value)
+    setFormData((prev) => ({
+      ...prev,
+      systembolaget_url: value,
+      systembolaget_number: parsedNumber || prev.systembolaget_number,
+    }))
+  }
 
   if (isLoading) return <Loading message="Laddar ingrediens..." />
 
@@ -132,6 +144,13 @@ export default function EditIngredientPage() {
                 onChange={(e) => setFormData({ ...formData, systembolaget_number: e.target.value })}
               />
             </div>
+            <Input
+              label="Systembolaget-länk"
+              type="url"
+              placeholder="https://www.systembolaget.se/produkt/..."
+              value={formData.systembolaget_url}
+              onChange={(e) => handleSystembolagetUrlChange(e.target.value)}
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

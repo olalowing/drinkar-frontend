@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Wine, GlassWater, Youtube } from 'lucide-react'
+import StarRating from '../ui/StarRating'
 
 export default function DrinkListItem({ drink }) {
   const mainImage = drink.images?.[0]
@@ -42,6 +43,12 @@ export default function DrinkListItem({ drink }) {
                   {drink.spritbas}
                 </p>
               )}
+              {drink.rating ? (
+                <div className="flex items-center gap-2 mt-1">
+                  <StarRating value={drink.rating} readOnly size="sm" />
+                  <span className="text-xs font-semibold text-gray-600">{drink.rating} / 5</span>
+                </div>
+              ) : null}
             </div>
 
             {/* Icons on the right */}

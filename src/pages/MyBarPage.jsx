@@ -43,12 +43,13 @@ export default function MyBarPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Min Bar</h1>
-          <p className="text-gray-600 mt-1">
-            {myIngredients.length} {myIngredients.length === 1 ? 'ingrediens' : 'ingredienser'} hemma
-          </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full sm:flex-1">
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Sök ingredienser..."
+          />
         </div>
         <Link to="/ingredients/new" className="shrink-0">
           <Button size="lg" className="w-full sm:w-auto shadow-lg">
@@ -57,12 +58,6 @@ export default function MyBarPage() {
           </Button>
         </Link>
       </div>
-
-      <SearchBar
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Sök ingredienser..."
-      />
 
       {/* My ingredients */}
       <div>

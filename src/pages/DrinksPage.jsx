@@ -43,13 +43,6 @@ export default function DrinksPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mina Drinkar</h1>
-        </div>
-      </div>
-
       {/* Search and filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 flex flex-col gap-3 sm:flex-row sm:items-center">

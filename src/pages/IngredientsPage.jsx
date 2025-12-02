@@ -34,12 +34,26 @@ export default function IngredientsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ingredienser</h1>
-          <p className="text-gray-600 mt-1">
-            {ingredients.length} {ingredients.length === 1 ? 'ingrediens' : 'ingredienser'}
-          </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1 w-full">
+          <div className="flex-1 w-full">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Sök ingredienser..."
+            />
+          </div>
+          <select
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-full sm:w-56"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat === 'all' ? 'Alla kategorier' : cat}
+              </option>
+            ))}
+          </select>
         </div>
         <Link to="/ingredients/new" className="shrink-0">
           <Button size="lg" className="w-full sm:w-auto shadow-lg">
@@ -47,27 +61,6 @@ export default function IngredientsPage() {
             Ny ingrediens
           </Button>
         </Link>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Sök ingredienser..."
-          />
-        </div>
-        <select
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map(cat => (
-            <option key={cat} value={cat}>
-              {cat === 'all' ? 'Alla kategorier' : cat}
-            </option>
-          ))}
-        </select>
       </div>
 
       {filteredIngredients.length === 0 ? (

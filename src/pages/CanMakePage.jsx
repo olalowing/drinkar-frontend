@@ -67,18 +67,16 @@ export default function CanMakePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Kan göra</h1>
-        <p className="text-gray-600 mt-1">
+      <div className="space-y-2">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Sök drinkar..."
+        />
+        <p className="text-sm text-gray-500">
           Baserat på dina {myIngredients.size} ingredienser hemma
         </p>
       </div>
-
-      <SearchBar
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Sök drinkar..."
-      />
 
       {/* Can make now */}
       <div>

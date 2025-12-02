@@ -55,12 +55,6 @@ export default function IngredientsPage() {
             ))}
           </select>
         </div>
-        <Link to="/ingredients/new" className="shrink-0">
-          <Button size="lg" className="w-full sm:w-auto shadow-lg">
-            <Plus className="w-5 h-5 mr-2" />
-            Ny ingrediens
-          </Button>
-        </Link>
       </div>
 
       {filteredIngredients.length === 0 ? (

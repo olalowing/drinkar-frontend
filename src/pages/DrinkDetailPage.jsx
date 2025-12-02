@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Edit2, Trash2, ArrowLeft, ExternalLink } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Edit2, Trash2, ArrowLeft, ExternalLink, MoreVertical } from 'lucide-react'
 import { useDrink } from '../hooks/useDrinks'
 import { deleteDrink } from '../lib/api/drinks'
 import Button from '../components/ui/Button'
@@ -8,6 +9,8 @@ import Loading from '../components/ui/Loading'
 import StarRating from '../components/ui/StarRating'
 
 export default function DrinkDetailPage() {
+  const [actionsOpen, setActionsOpen] = useState(false)
+  const actionsRef = useRef(null)
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: drink, isLoading, error } = useDrink(id)
@@ -22,6 +25,20 @@ export default function DrinkDetailPage() {
       alert('Kunde inte ta bort drink: ' + error.message)
     }
   }
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (actionsRef.current && !actionsRef.current.contains(event.target)) {
+        setActionsOpen(false)
+      }
+    }
+
+    if (actionsOpen) {
+      document.addEventListener('click', handleClick)
+    }
+
+    return () => document.removeEventListener('click', handleClick)
+  }, [actionsOpen])
 
   if (isLoading) return <Loading message="Laddar drink..." />
 
@@ -58,17 +75,35 @@ export default function DrinkDetailPage() {
             <p className="text-sm text-gray-500 mt-3">Inte betygsatt ännu</p>
           )}
         </div>
-        <div className="flex gap-2">
-          <Link to={`/drinks/${id}/edit`}>
-            <Button variant="secondary" size="sm">
-              <Edit2 className="w-4 h-4 mr-2" />
-              Redigera
-            </Button>
-          </Link>
-          <Button variant="danger" size="sm" onClick={handleDelete}>
-            <Trash2 className="w-4 h-4 mr-2" />
-            Ta bort
-          </Button>
+        <div className="relative" ref={actionsRef}>
+          <button
+            onClick={() => setActionsOpen(!actionsOpen)}
+            className="inline-flex items-center p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-primary-500"
+          >
+            <MoreVertical className="w-5 h-5" />
+          </button>
+          {actionsOpen && (
+            <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-xl z-20">
+              <Link
+                to={`/drinks/${id}/edit`}
+                onClick={() => setActionsOpen(false)}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+              >
+                <Edit2 className="w-4 h-4" />
+                Redigera
+              </Link>
+              <button
+                onClick={() => {
+                  setActionsOpen(false)
+                  handleDelete()
+                }}
+                className="flex w-full items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50"
+              >
+                <Trash2 className="w-4 h-4" />
+                Ta bort
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

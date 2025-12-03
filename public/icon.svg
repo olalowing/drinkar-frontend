@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0F2FE;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#BAE6FD;stop-opacity:0.7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+
+  <!-- Cocktail glass -->
+  <g transform="translate(256, 256)">
+    <!-- Glass stem -->
+    <rect x="-8" y="100" width="16" height="80" fill="#E0F2FE" opacity="0.9"/>
+    <!-- Glass base -->
+    <ellipse cx="0" cy="180" rx="40" ry="8" fill="#E0F2FE" opacity="0.9"/>
+
+    <!-- Martini glass bowl -->
+    <path d="M -80 -100 L 0 80 L 80 -100 Z" fill="url(#glass)" stroke="#BAE6FD" stroke-width="4"/>
+
+    <!-- Drink liquid -->
+    <path d="M -70 -90 L 0 65 L 70 -90 Z" fill="#EC4899" opacity="0.6"/>
+
+    <!-- Olive garnish -->
+    <circle cx="0" cy="-20" r="18" fill="#86AB23"/>
+    <circle cx="0" cy="-20" r="12" fill="#6B8E23"/>
+
+    <!-- Cocktail stick -->
+    <line x1="0" y1="-90" x2="0" y2="10" stroke="#D4AF37" stroke-width="3"/>
+
+    <!-- Shine effect -->
+    <path d="M -60 -80 L -20 0 L -70 -60 Z" fill="white" opacity="0.3"/>
+  </g>
+</svg>

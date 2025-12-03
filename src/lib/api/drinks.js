@@ -32,6 +32,13 @@ export async function getDrinks() {
             id,
             name
           )
+        ),
+        drink_occasions (
+          occasion_tags (
+            id,
+            name,
+            icon
+          )
         )
       `)
       .order('created_at', { ascending: false })
@@ -50,6 +57,7 @@ export async function getDrinks() {
         ?.sort((a, b) => a.sort_order - b.sort_order)
         .map(inst => inst.instruction) || [],
       tags: drink.drink_tags?.map(dt => dt.tags.name) || [],
+      occasion_tags: drink.drink_occasions?.map(oc => oc.occasion_tags) || [],
     }))
   } catch (error) {
     console.error('Error fetching drinks:', error)
@@ -85,6 +93,38 @@ export async function getDrink(id) {
             id,
             name
           )
+        ),
+        drink_variations (
+          id,
+          name,
+          description,
+          effect,
+          sort_order
+        ),
+        garnish_options (
+          id,
+          name,
+          description,
+          effect,
+          sort_order
+        ),
+        proportion_examples (
+          id,
+          name,
+          description,
+          sort_order
+        ),
+        drink_tips (
+          id,
+          tip,
+          sort_order
+        ),
+        drink_occasions (
+          occasion_tags (
+            id,
+            name,
+            icon
+          )
         )
       `)
       .eq('id', id)
@@ -103,6 +143,16 @@ export async function getDrink(id) {
         ?.sort((a, b) => a.sort_order - b.sort_order)
         .map(inst => inst.instruction) || [],
       tags: data.drink_tags?.map(dt => dt.tags.name) || [],
+      variations: data.drink_variations
+        ?.sort((a, b) => a.sort_order - b.sort_order) || [],
+      garnish_options: data.garnish_options
+        ?.sort((a, b) => a.sort_order - b.sort_order) || [],
+      proportion_examples: data.proportion_examples
+        ?.sort((a, b) => a.sort_order - b.sort_order) || [],
+      tips: data.drink_tips
+        ?.sort((a, b) => a.sort_order - b.sort_order)
+        .map(tip => tip.tip) || [],
+      occasion_tags: data.drink_occasions?.map(oc => oc.occasion_tags) || [],
     }
   } catch (error) {
     console.error('Error fetching drink:', error)
@@ -203,7 +253,19 @@ export async function createDrink(drinkData) {
 // Update drink
 export async function updateDrink(id, drinkData) {
   try {
-    const { images, existingImages, ingredients, instructions, tags, ...drinkInfo } = drinkData
+    const {
+      images,
+      existingImages,
+      ingredients,
+      instructions,
+      tags,
+      variations,
+      garnish_options,
+      proportion_examples,
+      tips,
+      occasion_tags,
+      ...drinkInfo
+    } = drinkData
 
     // 1. Update drink info
     const sanitizedDrinkInfo = {
@@ -277,6 +339,11 @@ export async function updateDrink(id, drinkData) {
     await supabase.from('drink_ingredients').delete().eq('drink_id', id)
     await supabase.from('drink_instructions').delete().eq('drink_id', id)
     await supabase.from('drink_tags').delete().eq('drink_id', id)
+    await supabase.from('drink_variations').delete().eq('drink_id', id)
+    await supabase.from('garnish_options').delete().eq('drink_id', id)
+    await supabase.from('proportion_examples').delete().eq('drink_id', id)
+    await supabase.from('drink_tips').delete().eq('drink_id', id)
+    await supabase.from('drink_occasions').delete().eq('drink_id', id)
 
     // 4. Add new ingredients
     if (ingredients && ingredients.length > 0) {
@@ -291,7 +358,6 @@ export async function updateDrink(id, drinkData) {
     }
 
     // 5. Add new instructions
-    console.log('Instructions received in updateDrink:', instructions)
     if (instructions && instructions.length > 0) {
       const instructionsData = instructions.map((inst, index) => ({
         drink_id: id,
@@ -299,20 +365,67 @@ export async function updateDrink(id, drinkData) {
         sort_order: index,
       }))
 
-      console.log('Inserting instructions:', instructionsData)
       const { error: instructionsError } = await supabase.from('drink_instructions').insert(instructionsData)
-      if (instructionsError) {
-        console.error('Error inserting instructions:', instructionsError)
-        throw instructionsError
-      }
-      console.log('Instructions inserted successfully')
-    } else {
-      console.log('No instructions to insert')
+      if (instructionsError) throw instructionsError
     }
 
-    // 6. Add new tags
+    // 6. Add new variations
+    if (variations && variations.length > 0) {
+      const variationsData = variations.map((variation, index) => ({
+        drink_id: id,
+        name: variation.name,
+        description: variation.description,
+        effect: variation.effect,
+        sort_order: index,
+      }))
+
+      await supabase.from('drink_variations').insert(variationsData)
+    }
+
+    // 7. Add new garnish options
+    if (garnish_options && garnish_options.length > 0) {
+      const garnishData = garnish_options.map((option, index) => ({
+        drink_id: id,
+        name: option.name,
+        description: option.description,
+        effect: option.effect,
+        sort_order: index,
+      }))
+
+      await supabase.from('garnish_options').insert(garnishData)
+    }
+
+    // 8. Add new proportion examples
+    if (proportion_examples && proportion_examples.length > 0) {
+      const proportionData = proportion_examples.map((example, index) => ({
+        drink_id: id,
+        name: example.name,
+        description: example.description || '',
+        sort_order: index,
+      }))
+
+      await supabase.from('proportion_examples').insert(proportionData)
+    }
+
+    // 9. Add new tips
+    if (tips && tips.length > 0) {
+      const tipsData = tips.map((tip, index) => ({
+        drink_id: id,
+        tip: tip,
+        sort_order: index,
+      }))
+
+      await supabase.from('drink_tips').insert(tipsData)
+    }
+
+    // 10. Add new tags
     if (tags && tags.length > 0) {
       await addTagsToDrink(id, tags)
+    }
+
+    // 11. Add occasion tags
+    if (occasion_tags && occasion_tags.length > 0) {
+      await addOccasionTagsToDrink(id, occasion_tags)
     }
 
     return { id }
@@ -443,6 +556,42 @@ export async function getTags() {
     return data
   } catch (error) {
     console.error('Error fetching tags:', error)
+    throw error
+  }
+}
+
+// Get all occasion tags
+export async function getOccasionTags() {
+  try {
+    const { data, error } = await supabase
+      .from('occasion_tags')
+      .select('*')
+      .order('name')
+
+    if (error) throw error
+    return data
+  } catch (error) {
+    console.error('Error fetching occasion tags:', error)
+    throw error
+  }
+}
+
+// Helper function to add occasion tags to drink
+async function addOccasionTagsToDrink(drinkId, occasionTagIds) {
+  try {
+    // Link occasion tags to drink
+    const drinkOccasionsData = occasionTagIds.map(tagId => ({
+      drink_id: drinkId,
+      occasion_tag_id: tagId,
+    }))
+
+    const { error } = await supabase
+      .from('drink_occasions')
+      .insert(drinkOccasionsData)
+
+    if (error) throw error
+  } catch (error) {
+    console.error('Error adding occasion tags:', error)
     throw error
   }
 }

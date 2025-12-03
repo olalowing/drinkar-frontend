@@ -9,6 +9,7 @@ export const drinkKeys = {
   details: () => [...drinkKeys.all, 'detail'],
   detail: (id) => [...drinkKeys.details(), id],
   tags: ['tags'],
+  occasionTags: ['occasion-tags'],
 }
 
 // Get all drinks
@@ -79,5 +80,13 @@ export function useTags() {
   return useQuery({
     queryKey: drinkKeys.tags,
     queryFn: drinksApi.getTags,
+  })
+}
+
+// Get all occasion tags
+export function useOccasionTags() {
+  return useQuery({
+    queryKey: drinkKeys.occasionTags,
+    queryFn: drinksApi.getOccasionTags,
   })
 }

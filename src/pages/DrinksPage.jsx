@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { Wine, Grid3x3, List, Filter } from 'lucide-react'
-import { useDrinks } from '../hooks/useDrinks'
+import { useDrinks, useOccasionTags } from '../hooks/useDrinks'
 import { groupDrinksBySpritbas } from '../lib/utils'
 import Button from '../components/ui/Button'
 import SearchBar from '../components/ui/SearchBar'
@@ -13,9 +13,13 @@ export default function DrinksPage() {
   const [showGrouped, setShowGrouped] = useState(true)
   const [viewMode, setViewMode] = useState('list') // 'grid' or 'list'
   const [selectedSpirit, setSelectedSpirit] = useState(null) // Quick filter
+  const [selectedOccasionTag, setSelectedOccasionTag] = useState(null) // Occasion filter
   const [otherFiltersOpen, setOtherFiltersOpen] = useState(false)
+  const [occasionFiltersOpen, setOccasionFiltersOpen] = useState(false)
   const otherFiltersRef = useRef(null)
+  const occasionFiltersRef = useRef(null)
   const { data: drinks = [], isLoading, error } = useDrinks()
+  const { data: occasionTags = [] } = useOccasionTags()
 
   const filteredDrinks = drinks.filter((drink) => {
     // Search filter
@@ -27,7 +31,11 @@ export default function DrinksPage() {
     // Spirit filter
     const matchesSpirit = !selectedSpirit || drink.spritbas === selectedSpirit
 
-    return matchesSearch && matchesSpirit
+    // Occasion filter
+    const matchesOccasion = !selectedOccasionTag ||
+      drink.occasion_tags?.some(tag => tag.id === selectedOccasionTag)
+
+    return matchesSearch && matchesSpirit && matchesOccasion
   })
 
   const groupedDrinks = showGrouped ? groupDrinksBySpritbas(filteredDrinks) : null
@@ -47,12 +55,15 @@ export default function DrinksPage() {
       if (otherFiltersRef.current && !otherFiltersRef.current.contains(event.target)) {
         setOtherFiltersOpen(false)
       }
+      if (occasionFiltersRef.current && !occasionFiltersRef.current.contains(event.target)) {
+        setOccasionFiltersOpen(false)
+      }
     }
-    if (otherFiltersOpen) {
+    if (otherFiltersOpen || occasionFiltersOpen) {
       document.addEventListener('click', handleClick)
     }
     return () => document.removeEventListener('click', handleClick)
-  }, [otherFiltersOpen])
+  }, [otherFiltersOpen, occasionFiltersOpen])
 
   if (isLoading) return <Loading message="Laddar drinkar..." />
 
@@ -128,6 +139,56 @@ export default function DrinksPage() {
                           }`}
                         >
                           {spirit}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {occasionTags.length > 0 && (
+              <div className="relative" ref={occasionFiltersRef}>
+                <button
+                  onClick={() => setOccasionFiltersOpen(!occasionFiltersOpen)}
+                  className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium ${
+                    selectedOccasionTag
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  📅
+                  Tillfälle
+                  {selectedOccasionTag && (
+                    <span className="ml-1 text-xs">•</span>
+                  )}
+                </button>
+                {occasionFiltersOpen && (
+                  <div className="absolute z-20 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl p-2 space-y-1">
+                    <button
+                      onClick={() => {
+                        setSelectedOccasionTag(null)
+                        setOccasionFiltersOpen(false)
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
+                    >
+                      Alla tillfällen
+                    </button>
+                    <div className="max-h-64 overflow-y-auto space-y-1">
+                      {occasionTags.map((tag) => (
+                        <button
+                          key={tag.id}
+                          onClick={() => {
+                            setSelectedOccasionTag(tag.id)
+                            setOccasionFiltersOpen(false)
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm rounded-lg flex items-center gap-2 ${
+                            selectedOccasionTag === tag.id
+                              ? 'bg-primary-600 text-white'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span>{tag.icon}</span>
+                          <span>{tag.name}</span>
                         </button>
                       ))}
                     </div>

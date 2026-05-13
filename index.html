@@ -24,8 +24,11 @@
     <!-- Theme Color -->
     <meta name="theme-color" content="#EC4899" />
 
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <!-- Web App Manifest (use-credentials so CF Access cookie is sent) -->
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+
+    <!-- Mobile (replaces deprecated apple-mobile-web-app-capable) -->
+    <meta name="mobile-web-app-capable" content="yes" />
   </head>
   <body>
     <div id="root"></div>

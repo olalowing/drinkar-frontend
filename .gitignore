@@ -30,3 +30,6 @@ dist-ssr
 node_modules
 .vercel
 .env*.local
+
+# Local backend symlink (separate repo at github.com/olalowing/drinkar-backend)
+/backend

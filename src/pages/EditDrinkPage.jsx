@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Plus, X, ChevronDown, ChevronUp } from 'lucide-react'
@@ -14,6 +14,19 @@ import StarRating from '../components/ui/StarRating'
 const DIFFICULTY_LEVELS = ['Enkel', 'Medel', 'Avancerad']
 const TEMPERATURE_OPTIONS = ['Kylt', 'Rumstempererat', 'Varmt', 'Frusen']
 const ICE_OPTIONS = ['Isbitar', 'Stor isbit', 'Crushed ice', 'Ingen is']
+
+const LocalTextarea = memo(function LocalTextarea({ initialValue, onCommit, ...props }) {
+  const [value, setValue] = useState(initialValue || '')
+  useEffect(() => { setValue(initialValue || '') }, [initialValue])
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={() => onCommit(value)}
+      {...props}
+    />
+  )
+})
 
 export default function EditDrinkPage() {
   const { id } = useParams()
@@ -273,11 +286,11 @@ export default function EditDrinkPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Beskrivning (2-3 meningar)
               </label>
-              <textarea
+              <LocalTextarea
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 rows="3"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                initialValue={formData.description}
+                onCommit={(v) => setFormData((prev) => ({ ...prev, description: v }))}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -410,12 +423,12 @@ export default function EditDrinkPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Stil och smakprofil (en bullet point per rad)
               </label>
-              <textarea
+              <LocalTextarea
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 rows="4"
                 placeholder="Gin ger en botanisk grund med enebär och citrusnoter.&#10;Campari bidrar med intensiv bitterhet och röd fruktighet."
-                value={formData.style_description}
-                onChange={(e) => setFormData({ ...formData, style_description: e.target.value })}
+                initialValue={formData.style_description}
+                onCommit={(v) => setFormData((prev) => ({ ...prev, style_description: v }))}
               />
             </div>
           </div>
